@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 from transformers import BertJapaneseTokenizer, BertModel
 import pytorch_lightning as pl
 
-from multi_classification import BertForSequenceClassificationMultiLabel
+from PY_classification.multi_classification import BertForSequenceClassificationMultiLabel
 
 class BertForSequenceClassificationMultiLabel_pl(pl.LightningModule):
 
