@@ -2,7 +2,7 @@ import re
 import string
 import emoji
 
-from emoji_list import get_all_emoji
+from PY_preprocessing.emoji_list import get_all_emoji
 
 class Count:
     def __init__(self):
