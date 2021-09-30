@@ -73,6 +73,22 @@ class Remove:
 
 		return removed_list
 
+	def add_url(self, tweets_list):
+		'''
+		the process of removing URL ('httpXXXX')
+		'''
+		removed_list = []
+
+		for tweet in tweets_list:
+			while re.search(r'http[a-zA-Z:./0-9]*', tweet) is not None:
+				an = re.search(r'http[a-zA-Z:./0-9]*', tweet)
+				start = an.span()[0]
+				end = an.span()[1]
+				tweet = str(tweet[:start]) + str('URL') + str(tweet[end:])
+			removed_list.append(tweet)
+
+		return removed_list
+
 
 	def hashtag(self, tweets_list):
 		'''
@@ -218,6 +234,17 @@ class Remove:
 
 
 		return new_removed_list
+
+	def to_lower(self, tweets_list):
+		'''
+		to lower
+		'''
+		removed_list = []
+
+		for tweet in tweets_list:
+			removed_list.append(tweet.lower())
+
+		return removed_list
 
 
 if '__name__' == '__main__':
