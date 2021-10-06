@@ -3,6 +3,7 @@ import string
 import emoji
 
 from PY_preprocessing.emoji_list import get_all_emoji
+from PY_tweet.lists_file import *
 
 class Remove:
 	def __init__(self):
@@ -157,7 +158,43 @@ class Remove:
 
 		for tweet in tweets_list:
 
+			while re.search(r'covid19|covid-19|covid', tweet.lower()) is not None:
+				a = re.search(r'covid19|covid-19|covid', tweet.lower())
+				start = a.span()[0]
+				end = a.span()[1]
+				tweet = str(tweet[:start]) + 'コロナ' + str(tweet[end:])
 
+			removed_list.append(tweet)
+
+
+		return removed_list
+
+	def virus(self, tweets_list):
+
+		removed_list = []
+
+		for tweet in tweets_list:
+
+			while re.search(r'ウィルス', tweet.lower()) is not None:
+				a = re.search(r'ウィルス', tweet.lower())
+				start = a.span()[0]
+				end = a.span()[1]
+				tweet = str(tweet[:start]) + 'ウイルス' + str(tweet[end:])
+
+			removed_list.append(tweet)
+
+
+		return removed_list
+
+
+	def top100(self, tweets_list):
+		'''
+		count the number of of tweets contained conid-19 ('httpXXX')
+		'''
+		
+		removed_list = []
+
+		for tweet in tweets_list:
 
 			while re.search(r'covid19|covid-19|covid', tweet.lower()) is not None:
 				a = re.search(r'covid19|covid-19|covid', tweet.lower())
@@ -165,29 +202,29 @@ class Remove:
 				end = a.span()[1]
 				tweet = str(tweet[:start]) + 'コロナ' + str(tweet[end:])
 
-			while re.search(r'corona', tweet.lower()) is not None:
-				b = re.search(r'corona', tweet.lower())
-				start = b.span()[0]
-				end = b.span()[1]
-				tweet = str(tweet[:start]) + 'コロナ' + str(tweet[end:])
+			# while re.search(r'corona', tweet.lower()) is not None:
+			# 	b = re.search(r'corona', tweet.lower())
+			# 	start = b.span()[0]
+			# 	end = b.span()[1]
+			# 	tweet = str(tweet[:start]) + 'コロナ' + str(tweet[end:])
 
-			while re.search(r'who', tweet.lower()) is not None:
-				c = re.search(r'who', tweet.lower())
-				start = c.span()[0]
-				end = c.span()[1]
-				tweet = str(tweet[:start]) + '世界保健機関' + str(tweet[end:])
+			# while re.search(r'who', tweet.lower()) is not None:
+			# 	c = re.search(r'who', tweet.lower())
+			# 	start = c.span()[0]
+			# 	end = c.span()[1]
+			# 	tweet = str(tweet[:start]) + '世界保健機関' + str(tweet[end:])
 
-			while re.search(r'pcr', tweet.lower()) is not None:
-				d = re.search(r'pcr', tweet.lower())
-				start = d.span()[0]
-				end = d.span()[1]
-				if tweet[end:end+2] != '検査':
-					tweet = str(tweet[:start]) + '検査' + str(tweet[end:])
-				else:
-					tweet = str(tweet[:start]) + str(tweet[end:])
+			# while re.search(r'pcr', tweet.lower()) is not None:
+			# 	d = re.search(r'pcr', tweet.lower())
+			# 	start = d.span()[0]
+			# 	end = d.span()[1]
+			# 	if tweet[end:end+2] != '検査':
+			# 		tweet = str(tweet[:start]) + '検査' + str(tweet[end:])
+			# 	else:
+			# 		tweet = str(tweet[:start]) + str(tweet[end:])
 
-			while re.search(r'virus', tweet.lower()) is not None: 
-				e = re.search(r'virus', tweet.lower())
+			while re.search(r'ウィルス', tweet) is not None: 
+				e = re.search(r'ウィルス', tweet)
 				start = e.span()[0]
 				end = e.span()[1]
 				tweet = str(tweet[:start]) + 'ウイルス' + str(tweet[end:])
@@ -226,10 +263,10 @@ class Remove:
 
 		for tweet in removed_list:
 			while re.search(r'[^abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ:./0-9]ww+', tweet) is not None: 
-			    e = re.search(r'[^abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ:./0-9]ww+', tweet)
-			    start = e.span()[0]
-			    end = e.span()[1]
-			    tweet = str(tweet[:start]) + ('笑' * (end-start)) + str(tweet[end:])
+				e = re.search(r'[^abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ:./0-9]ww+', tweet)
+				start = e.span()[0]
+				end = e.span()[1]
+				tweet = str(tweet[:start+1]) + ('笑' * (end-start-1)) + str(tweet[end:])
 			new_removed_list.append(tweet)
 
 
@@ -246,6 +283,92 @@ class Remove:
 
 		return removed_list
 
+
+	def japanese(self, tweets_list):
+
+		removed_list = self.url(tweets_list)
+
+		new_removed_list = []
+
+		for tweet in removed_list:
+			while re.search(r'[a-zA-Z]+', tweet) is not None:
+					e = re.search(r'[a-zA-Z]+', tweet)
+					start = e.span()[0]
+					end = e.span()[1]
+					tweet = str(tweet[:start]) + str(tweet[end:])
+			new_removed_list.append(tweet)
+		
+		return new_removed_list
+
+	def number(self, tweets_list):
+
+		zero_list = []
+
+		for tweet in tweets_list:
+			while (re.search(r'[0-9]+', tweet) is not None):
+				an = re.search(r'[0-9]+', tweet)
+				start = an.span()[0]
+				end = an.span()[1]
+				tweet = str(tweet[:start]) + str(tweet[end:])
+			zero_list.append(tweet)
+
+		new_zero_list = []
+
+		for tweet in zero_list:
+			while (re.search(r'[０-９]+', tweet) is not None):
+				an = re.search(r'[０-９]+', tweet)
+				start = an.span()[0]
+				end = an.span()[1]
+				tweet = str(tweet[:start]) + str(tweet[end:])
+			new_zero_list.append(tweet)
+
+		return new_zero_list
+
+	def number_to_zero(self, tweets_list):
+
+		zero_list = []
+
+		for tweet in tweets_list:
+			end = 0
+			while (re.search(r'[0-9]+', tweet[end:]) is not None):
+				an = re.search(r'[0-9]+', tweet[end:])
+				start = end + an.span()[0]
+				end = end + an.span()[1]
+				# print(start, end)
+				tweet = str(tweet[:start]) + '0' + str(tweet[end:])
+			zero_list.append(tweet)
+		new_zero_list = []
+
+		for tweet in zero_list:
+			while (re.search(r'[０-９]+', tweet) is not None):
+				an = re.search(r'[０-９]+', tweet)
+				start = an.span()[0]
+				end = an.span()[1]
+				tweet = str(tweet[:start]) + '0' + str(tweet[end:])
+			new_zero_list.append(tweet)
+
+		return new_zero_list
+
+	def make_stop_words(self, tweets_list):
+		stop_words_list = loadJoblib('../DATA_labels/stopword_list.joblib')
+
+		print(stop_words_list)
+
+		removed_list = []
+
+		for tweet in tweets_list:
+			for stop in stop_words_list:
+				while re.search(r'{}'.format(stop), tweet) is not None:
+						e = re.search(r'{}'.format(stop), tweet)
+						start = e.span()[0]
+						end = e.span()[1]
+						tweet = str(tweet[:start]) + str(tweet[end:])
+			removed_list.append(tweet)
+		
+		return removed_list
+
+
+		
 
 if '__name__' == '__main__':
 	pass
